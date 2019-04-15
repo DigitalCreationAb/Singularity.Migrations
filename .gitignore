@@ -1,0 +1,8 @@
+*.user
+.idea/
+obj
+bin
+.data/
+.out/
+paket-files/
+packages/
