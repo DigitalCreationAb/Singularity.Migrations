@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.1.0</Version>
+    <Authors>Mattias Jakobsson</Authors>
+    <Company>Digital Creation Sweden AB</Company>
+    <Description>SqlServer coordinator for Singularity Migrations</Description>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DigitalCreationAb/Singularity.Migrations</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Singularity.Migrations\Singularity.Migrations.csproj" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
