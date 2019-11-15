@@ -1,4 +1,7 @@
+using System;
+using System.Data;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 
 namespace Singularity.Migrations.Coordinators.SqlServer
 {
@@ -6,6 +9,8 @@ namespace Singularity.Migrations.Coordinators.SqlServer
     {
         string Key { get; }
         string MigrationTableName { get; }
-        SqlConnection Connection { get; }
+        Task<T> RunInTransaction<T>(
+            Func<SqlConnection, SqlTransaction, Task<T>> run, 
+            IsolationLevel isolationLevel = IsolationLevel.ReadCommitted);
     }
 }
