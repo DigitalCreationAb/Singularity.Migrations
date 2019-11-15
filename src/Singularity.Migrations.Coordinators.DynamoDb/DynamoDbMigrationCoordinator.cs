@@ -5,12 +5,17 @@ using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
+using Singularity.Migrations.Logging;
 
 namespace Singularity.Migrations.Coordinators.DynamoDb
 {
     public class DynamoDbMigrationCoordinator<TContext> : MigrationCoordinator<TContext>
         where TContext : IDynamoDbMigrationContext
     {
+        public DynamoDbMigrationCoordinator(IMigrationLoggerFactory loggerFactory) : base(loggerFactory)
+        {
+        }
+        
         protected override async Task Initialize(TContext context)
         {
             try

@@ -2,12 +2,17 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Singularity.Migrations.Logging;
 
 namespace Singularity.Migrations.Coordinators.SqlServer
 {
     public class SqlServerMigrationCoordinator<TContext> : MigrationCoordinator<TContext>
         where TContext : ISqlServerMigrationContext
     {
+        public SqlServerMigrationCoordinator(IMigrationLoggerFactory loggerFactory) : base(loggerFactory)
+        {
+        }
+        
         protected override async Task Initialize(TContext context)
         {
             using (var transaction = context.Connection.BeginTransaction(IsolationLevel.ReadCommitted))
