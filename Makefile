@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := build
-.PHONY: build restore install.ci package publish clean
+.PHONY: build restore install.env package publish clean
 NUGET_API_KEY ?= ""
 NUGET_FEED_URL ?= "https://f.feedz.io/digital-creation/open/nuget"
 
