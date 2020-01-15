@@ -14,7 +14,7 @@ package: clean restore
 	dotnet pack -c Release -o ${CURDIR}/.out
 
 publish: package
-	dotnet nuget push ./.out/*.nupkg -k $(NUGET_API_KEY) -s $(NUGET_FEED_URL)
+	dotnet nuget push ./.out/*.nupkg --skip-duplicate -k $(NUGET_API_KEY) -s $(NUGET_FEED_URL)
 	
 clean:
 	rm -rf ./src/**/obj ./src/**/bin ./.out
