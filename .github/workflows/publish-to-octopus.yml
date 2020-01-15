@@ -12,5 +12,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Install
+      run: make install.env
     - name: Publish packages
       run: make publish NUGET_API_KEY=${{ secrets.NUGET_API_KEY }}

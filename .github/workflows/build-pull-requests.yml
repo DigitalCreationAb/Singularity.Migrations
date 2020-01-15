@@ -10,5 +10,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v1
+    - name: Install
+      run: make install.env
     - name: Build
       run: make build
