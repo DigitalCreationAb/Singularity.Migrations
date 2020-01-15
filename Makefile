@@ -1,4 +1,8 @@
 SHELL := /bin/bash
+.ONESHELL:
+.DELETE_ON_ERROR:
+MAKEFLAGS += --no-builtin-rules
+
 .DEFAULT_GOAL := build
 .PHONY: build restore install.env package publish clean
 NUGET_API_KEY ?= ""
@@ -19,8 +23,10 @@ install.env:
 package: clean restore
 	dotnet pack -c Release -o ${CURDIR}/.out
 
-publish: package
-	dotnet nuget push ./.out/*.nupkg --skip-duplicate -k $(NUGET_API_KEY) -s $(NUGET_FEED_URL)
+publish: package ./.out/*.nupkg
+	for file in $^ ; do \
+		dotnet nuget push $${file} --skip-duplicate -k $(NUGET_API_KEY) -s $(NUGET_FEED_URL)
+	done
 
 clean:
 	rm -rf ./src/**/obj ./src/**/bin ./.out
