@@ -23,8 +23,8 @@ install.env:
 package: clean restore
 	dotnet pack -c Release -o ${CURDIR}/.out
 
-publish: package ./.out/*.nupkg
-	for file in $^ ; do \
+publish: package
+	for file in ./.out/*.nupkg ; do \
 		dotnet nuget push $${file} --skip-duplicate -k $(NUGET_API_KEY) -s $(NUGET_FEED_URL)
 	done
 
