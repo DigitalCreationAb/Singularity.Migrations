@@ -25,16 +25,16 @@ namespace Singularity.Migrations.Coordinators.AzureTableStorage
         protected override Task<(long sequenceNumber, long version)> ReadHighestMigration(TContext context)
         {
             var table = context.GetMigrationTable();
-
-            var query = table.CreateQuery<MigrationRun>()
+            
+            var result = table.CreateQuery<MigrationRun>()
                 .Where(TableQuery.GenerateFilterCondition(
                     "PartitionKey", 
                     QueryComparisons.Equal, 
                     context.Key))
                 .OrderByDesc("RowKey")
-                .Take(1);
-
-            var result = table.ExecuteQuery(query).FirstOrDefault();
+                .Take(1)
+                .Execute()
+                .FirstOrDefault();
 
             return Task.FromResult(result == null ? (0L, 0L) : (result.GetSequenceNumber(), result.Version));
         }
