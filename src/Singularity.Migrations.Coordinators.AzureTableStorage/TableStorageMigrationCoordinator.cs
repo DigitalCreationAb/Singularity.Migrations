@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos.Table;
+using Microsoft.Azure.Cosmos.Table.Queryable;
 using Singularity.Migrations.Logging;
 
 namespace Singularity.Migrations.Coordinators.AzureTableStorage
@@ -25,15 +26,14 @@ namespace Singularity.Migrations.Coordinators.AzureTableStorage
         protected override Task<(long sequenceNumber, long version)> ReadHighestMigration(TContext context)
         {
             var table = context.GetMigrationTable();
-            
-            var result = table.CreateQuery<MigrationRun>()
-                .Where(TableQuery.GenerateFilterCondition(
-                    "PartitionKey", 
-                    QueryComparisons.Equal, 
-                    context.Key))
-                .OrderByDesc("RowKey")
-                .Take(1)
+
+            var result = (from migrationRun in table
+                        .CreateQuery<MigrationRun>()
+                    where migrationRun.PartitionKey == context.Key
+                    select migrationRun)
+                .AsTableQuery()
                 .Execute()
+                .OrderByDescending(x => x.GetSequenceNumber())
                 .FirstOrDefault();
 
             return Task.FromResult(result == null ? (0L, 0L) : (result.GetSequenceNumber(), result.Version));
