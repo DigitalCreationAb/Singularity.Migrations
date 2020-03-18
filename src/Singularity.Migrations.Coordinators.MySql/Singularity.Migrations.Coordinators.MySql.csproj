@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.8.0</Version>
+    <Version>0.1.0</Version>
     <Authors>Mattias Jakobsson</Authors>
     <Company>Digital Creation Sweden AB</Company>
-    <Description>SqlServer coordinator for Singularity Migrations</Description>
+    <Description>MySql coordinator for Singularity Migrations</Description>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/DigitalCreationAb/Singularity.Migrations</RepositoryUrl>
   </PropertyGroup>

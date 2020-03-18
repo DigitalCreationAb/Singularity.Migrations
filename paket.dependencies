@@ -3,3 +3,4 @@ nuget AWSSDK.DynamoDBv2 3.3.100.5
 nuget Microsoft.Azure.Cosmos.Table
 nuget RavenDB.Client
 nuget System.Data.SqlClient
+nuget MySql.Data

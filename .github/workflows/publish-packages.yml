@@ -1,4 +1,4 @@
-name: Publish to octopus
+name: Publish packages
 
 on: 
   push:
