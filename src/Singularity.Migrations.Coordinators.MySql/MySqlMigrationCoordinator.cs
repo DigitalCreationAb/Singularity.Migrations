@@ -41,13 +41,13 @@ namespace Singularity.Migrations.Coordinators.MySql
                 var command = new MySqlCommand(
                     $@"SELECT MigrationSequenceNumber, Version 
                                 FROM {context.MigrationTableName}
-                                WHERE ProjectId = :ProjectId
+                                WHERE ProjectId = @ProjectId
                                 ORDER BY MigrationSequenceNumber DESC
                                 LIMIT 1;",
                     connection,
                     transaction);
                 
-                command.Parameters.AddWithValue(":ProjectId", context.Key);
+                command.Parameters.AddWithValue("@ProjectId", context.Key);
 
                 using (var reader = await command.ExecuteReaderAsync())
                 {
@@ -66,14 +66,14 @@ namespace Singularity.Migrations.Coordinators.MySql
             {
                 var command = new MySqlCommand(
                     $@"INSERT INTO {context.MigrationTableName}(ProjectId, MigrationSequenceNumber, Version, FinishedAt)
-                                            VALUES(:ProjectId, :MigrationSequenceNumber, :Version, :FinishedAt);",
+                                            VALUES(@ProjectId, @MigrationSequenceNumber, @Version, @FinishedAt);",
                     connection,
                     transaction);
 
-                command.Parameters.AddWithValue(":ProjectId", context.Key);
-                command.Parameters.AddWithValue(":MigrationSequenceNumber", sequenceNumber + 1);
-                command.Parameters.AddWithValue(":Version", version);
-                command.Parameters.AddWithValue(":FinishedAt", DateTimeOffset.Now);
+                command.Parameters.AddWithValue("@ProjectId", context.Key);
+                command.Parameters.AddWithValue("@MigrationSequenceNumber", sequenceNumber + 1);
+                command.Parameters.AddWithValue("@Version", version);
+                command.Parameters.AddWithValue("@FinishedAt", DateTimeOffset.Now);
 
                 return command.ExecuteNonQueryAsync();
             });
