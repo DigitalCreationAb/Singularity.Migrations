@@ -19,8 +19,8 @@ namespace Singularity.Migrations.Coordinators.MySql
                 var command = new MySqlCommand(
                     $@"CREATE TABLE IF NOT EXISTS {context.MigrationTableName} (
                                     ProjectId nvarchar(50) not null,
-                                    MigrationSequenceNumber long not null,
-                                    Version long not null,
+                                    MigrationSequenceNumber bigint not null,
+                                    Version bigint not null,
                                     FinishedAt datetime not null,
 
                                     CONSTRAINT PK_{context.MigrationTableName} PRIMARY KEY(ProjectId, MigrationSequenceNumber)
