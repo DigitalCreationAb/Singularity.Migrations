@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{FD6CA9D4-5BA5-4948-8519-44E02C61B2F6}"
 	ProjectSection(SolutionItems) = preProject
 		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Singularity.Migrations", "src\Singularity.Migrations\Singularity.Migrations.csproj", "{AF2A5F95-61C1-47BE-A554-143B6FBED79F}"

@@ -1,6 +1,6 @@
-source https://www.nuget.org/api/v2
+source https://www.nuget.org/api/v2MySqlConnector
 nuget AWSSDK.DynamoDBv2 3.3.100.5
 nuget Microsoft.Azure.Cosmos.Table
-nuget MySqlConnector
+nuget MySqlConnector 0.49.2
 nuget RavenDB.Client
 nuget System.Data.SqlClient
