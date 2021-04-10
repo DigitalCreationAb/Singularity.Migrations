@@ -77,7 +77,7 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
             var migrationRun = new MigrationRun
             {
                 MigrationKey = context.Key,
-                MigrationSequenceNumber = sequenceNumber + 1,
+                MigrationSequenceNumber = sequenceNumber,
                 Version = version,
                 FinishedAt = DateTimeOffset.Now.ToString("O")
             };
