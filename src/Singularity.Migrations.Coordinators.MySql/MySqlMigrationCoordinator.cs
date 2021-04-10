@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using Singularity.Migrations.Logging;
 
 namespace Singularity.Migrations.Coordinators.MySql
