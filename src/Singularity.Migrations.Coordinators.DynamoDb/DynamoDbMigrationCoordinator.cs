@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using Singularity.Migrations.Logging;
 
@@ -46,22 +47,27 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
 
         protected override async Task<(long sequenceNumber, long version)> ReadHighestMigration(TContext context)
         {
-            var response = await context.DynamoDbClient
-                .QueryAsync(new QueryRequest(context.MigrationTableName)
+            var filter = new QueryFilter("migrationKey", QueryOperator.Equal, context.Key);
+            
+            var table = Table.LoadTable(context.DynamoDbClient, context.MigrationTableName);
+
+            try
+            {
+                var response = await table.Query(new QueryOperationConfig
                 {
                     Limit = 1,
-                    ConsistentRead = true,
-                    ScanIndexForward = false,
-                    KeyConditionExpression = "migrationKey = :migrationKey",
-                    ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                    {
-                        [":migrationKey"] = new AttributeValue(context.Key)
-                    }
-                });
+                    Filter = filter,
+                    BackwardSearch = true
+                }).GetNextSetAsync();
 
-            return response.Items.Any() 
-                ? (long.Parse(response.Items[0]["migrationSequenceNumber"].N), long.Parse(response.Items[0]["version"].N)) 
-                : (0, 0);
+                return response.Any()
+                    ? (response[0]["migrationSequenceNumber"].AsLong(), response[0]["version"].AsLong())
+                    : (0, 0);
+            }
+            catch (ResourceNotFoundException)
+            {
+                return (0, 0);
+            }
         }
 
         protected override async Task StoreMigrationPoint(TContext context, long sequenceNumber, long version)
