@@ -30,12 +30,12 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
                     BillingMode = BillingMode.PAY_PER_REQUEST,
                     KeySchema = new List<KeySchemaElement>
                     {
-                        new KeySchemaElement("key", KeyType.HASH),
+                        new KeySchemaElement("migrationKey", KeyType.HASH),
                         new KeySchemaElement("migrationSequenceNumber", KeyType.RANGE)
                     },
                     AttributeDefinitions = new List<AttributeDefinition>
                     {
-                        new AttributeDefinition("key", ScalarAttributeType.S),
+                        new AttributeDefinition("migrationKey", ScalarAttributeType.S),
                         new AttributeDefinition("migrationSequenceNumber", ScalarAttributeType.N)
                     }
                 });
@@ -52,10 +52,10 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
                     Limit = 1,
                     ConsistentRead = true,
                     ScanIndexForward = false,
-                    KeyConditionExpression = "key = :key",
+                    KeyConditionExpression = "migrationKey = :migrationKey",
                     ExpressionAttributeValues = new Dictionary<string, AttributeValue>
                     {
-                        [":key"] = new AttributeValue(context.Key)
+                        [":migrationKey"] = new AttributeValue(context.Key)
                     }
                 });
 
@@ -70,7 +70,7 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
             
             var migrationRun = new MigrationRun
             {
-                Key = context.Key,
+                MigrationKey = context.Key,
                 MigrationSequenceNumber = sequenceNumber + 1,
                 Version = version,
                 FinishedAt = DateTimeOffset.Now.ToString("O")
@@ -86,8 +86,8 @@ namespace Singularity.Migrations.Coordinators.DynamoDb
         
         private class MigrationRun
         {
-            [DynamoDBHashKey("key")]
-            public string Key { get; set; }
+            [DynamoDBHashKey("migrationKey")]
+            public string MigrationKey { get; set; }
 
             [DynamoDBRangeKey("migrationSequenceNumber")]
             public long MigrationSequenceNumber { get; set; }
