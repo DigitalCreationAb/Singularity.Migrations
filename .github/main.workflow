@@ -1,1 +1,1 @@
-secrets = ["NUGET_API_KEY"]
+secrets = ["NUGET_ORG_KEY"]
