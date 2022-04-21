@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 
-namespace Singularity.Migrations
+namespace Singularity.Migrations;
+
+public interface IMigration<in TContext>
 {
-    public interface IMigration<in TContext>
-    {
-        long Version { get; }   
-        Task Up(TContext context);
-        Task Down(TContext context);
-    }
+    long Version { get; }
+    Task Up(TContext context);
+    Task Down(TContext context);
 }

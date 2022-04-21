@@ -6,38 +6,35 @@ using Raven.Client.ServerWide;
 using Raven.Client.ServerWide.Operations;
 using System;
 
-namespace Singularity.Migrations.Coordinators.RavenDb
+namespace Singularity.Migrations.Coordinators.RavenDb;
+
+public static class DocumentStoreExtensions
 {
-    public static class DocumentStoreExtensions
+    public static void EnsureDatabaseExists(
+        this IDocumentStore store,
+        string? database = null,
+        bool createDatabaseIfNotExists = true)
     {
-        public static void EnsureDatabaseExists(
-            this IDocumentStore store,
-            string database = null,
-            bool createDatabaseIfNotExists = true)
+        database ??= store.Database;
+
+        if (string.IsNullOrWhiteSpace(database))
+            throw new ArgumentException("Value cannot be null or whitespace.", nameof(database));
+
+        try
         {
-            database = database ?? store.Database;
-            
-            if (string.IsNullOrWhiteSpace(database))
-                throw new ArgumentException("Value cannot be null or whitespace.", nameof (database));
-            
+            store.Maintenance.ForDatabase(database).Send(new GetStatisticsOperation());
+        }
+        catch (DatabaseDoesNotExistException)
+        {
+            if (!createDatabaseIfNotExists)
+                throw;
+
             try
             {
-                store.Maintenance.ForDatabase(database).Send(new GetStatisticsOperation());
+                store.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(database)));
             }
-            catch (DatabaseDoesNotExistException)
+            catch (ConcurrencyException)
             {
-                if (!createDatabaseIfNotExists)
-                {
-                    throw;
-                }
-
-                try
-                {
-                    store.Maintenance.Server.Send(new CreateDatabaseOperation(new DatabaseRecord(database), 1));
-                }
-                catch (ConcurrencyException)
-                {
-                }
             }
         }
     }

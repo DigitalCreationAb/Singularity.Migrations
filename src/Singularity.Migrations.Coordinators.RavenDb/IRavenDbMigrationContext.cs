@@ -1,13 +1,12 @@
 using Raven.Client.Documents;
 
-namespace Singularity.Migrations.Coordinators.RavenDb
+namespace Singularity.Migrations.Coordinators.RavenDb;
+
+public interface IRavenDbMigrationContext
 {
-    public interface IRavenDbMigrationContext
-    {
-        string ProjectId { get; }
+    string ProjectId { get; }
 
-        string MigrationDbName { get; }
+    string MigrationDbName { get; }
 
-        IDocumentStore DocumentStore { get; }
-    }
+    IDocumentStore DocumentStore { get; }
 }

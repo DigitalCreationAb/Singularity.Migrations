@@ -1,12 +1,11 @@
 using System;
 
-namespace Singularity.Migrations.Logging
+namespace Singularity.Migrations.Logging;
+
+public class ConsoleMigrationLoggerFactory : IMigrationLoggerFactory
 {
-    public class ConsoleMigrationLoggerFactory : IMigrationLoggerFactory
+    public IMigrationLogger CreateLogger(Type source)
     {
-        public IMigrationLogger CreateLogger(Type source)
-        {
-            return new ConsoleMigrationLogger();
-        }
+        return new ConsoleMigrationLogger();
     }
 }

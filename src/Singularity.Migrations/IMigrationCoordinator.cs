@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace Singularity.Migrations
+namespace Singularity.Migrations;
+
+public interface IMigrationCoordinator<TContext>
 {
-    public interface IMigrationCoordinator<TContext>
-    {
-        Task MigrateTo(
-            IEnumerable<Assembly> migrationAssemblies, 
-            Func<Type, IMigration<TContext>> resolveMigration, 
-            TContext context, 
-            long? version = null);
-    }
+    Task MigrateTo(
+        IEnumerable<Assembly> migrationAssemblies,
+        Func<Type, IMigration<TContext>> resolveMigration,
+        TContext context,
+        long? version = null);
 }

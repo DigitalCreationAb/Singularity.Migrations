@@ -1,9 +1,8 @@
 using System;
 
-namespace Singularity.Migrations.Logging
+namespace Singularity.Migrations.Logging;
+
+public interface IMigrationLoggerFactory
 {
-    public interface IMigrationLoggerFactory
-    {
-        IMigrationLogger CreateLogger(Type source);
-    }
+    IMigrationLogger CreateLogger(Type source);
 }
