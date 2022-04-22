@@ -24,12 +24,16 @@ public class RavenDbMigrationCoordinator<TContext> : LockableMigrationCoordinato
         context.DocumentStore.EnsureDatabaseExists(context.MigrationDbName);
 
         await context.DocumentStore.ExecuteIndexAsync(new MigrationRunSequenceIndex(), context.MigrationDbName);
-        
-        await context.DocumentStore.Maintenance.SendAsync(new ConfigureExpirationOperation(new ExpirationConfiguration
-        {
-            Disabled = false,
-            DeleteFrequencyInSec = 10
-        }));
+
+        await context
+            .DocumentStore
+            .Maintenance
+            .ForDatabase(context.MigrationDbName)
+            .SendAsync(new ConfigureExpirationOperation(new ExpirationConfiguration
+            {
+                Disabled = false,
+                DeleteFrequencyInSec = 10
+            }));
 
         await base.Initialize(context);
     }
@@ -51,7 +55,7 @@ public class RavenDbMigrationCoordinator<TContext> : LockableMigrationCoordinato
 
     protected override async Task WithLock(TContext context, string lockId, TimeSpan timeout, Func<Task> execute)
     {
-        using var session = context.DocumentStore.OpenAsyncSession();
+        using var session = context.DocumentStore.OpenAsyncSession(context.MigrationDbName);
 
         var elapsed = new Stopwatch();
 
