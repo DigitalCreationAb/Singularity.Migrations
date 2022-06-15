@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Raven.Client;
 using Raven.Client.Documents.Operations.Expiration;
 using Raven.Client.Exceptions;
+using Raven.Client.Exceptions.Documents.Session;
 
 namespace Singularity.Migrations.Coordinators.RavenDb;
 
@@ -66,18 +67,26 @@ public class RavenDbMigrationCoordinator<TContext> : LockableMigrationCoordinato
                 var lockItem = LockItem.Create(context.ProjectId, lockId);
 
                 await session.StoreAsync(lockItem, "", lockItem.Id);
-            
-                session.Advanced.GetMetadataFor(lockItem)[Constants.Documents.Metadata.Expires] = DateTime.UtcNow + timeout;
+
+                session.Advanced.GetMetadataFor(lockItem)[Constants.Documents.Metadata.Expires] =
+                    DateTime.UtcNow + timeout;
 
                 await session.SaveChangesAsync();
 
                 await execute();
-                
+
                 session.Delete(lockItem);
 
                 await session.SaveChangesAsync();
-                
+
                 return;
+            }
+            catch (NonUniqueObjectException e)
+            {
+                Logger
+                    .Information(e, "Failed getting lock");
+                
+                await Task.Delay(TimeSpan.FromSeconds(1));
             }
             catch (ConcurrencyException e)
             {
