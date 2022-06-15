@@ -56,14 +56,15 @@ public class RavenDbMigrationCoordinator<TContext> : LockableMigrationCoordinato
 
     protected override async Task WithLock(TContext context, string lockId, TimeSpan timeout, Func<Task> execute)
     {
-        using var session = context.DocumentStore.OpenAsyncSession(context.MigrationDbName);
-
         var elapsed = new Stopwatch();
 
         while (elapsed.Elapsed < timeout)
         {
             try
             {
+                using var session = context.DocumentStore.OpenAsyncSession(context.MigrationDbName);
+                session.Advanced.UseOptimisticConcurrency = true;
+                
                 var lockItem = LockItem.Create(context.ProjectId, lockId);
 
                 await session.StoreAsync(lockItem, "", lockItem.Id);
